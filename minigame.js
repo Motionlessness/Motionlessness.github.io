@@ -82,7 +82,7 @@ let mouse = {
     y: null
 };
 
-window.addEventListener('mousemove',
+canvas.addEventListener('mousemove',
     (event) => {
         mouse.x = event.x;
         mouse.y = event.y;
@@ -207,7 +207,7 @@ function animate() {
     crosshair.update(); // #crosshair
 };
 
-window.addEventListener('mousedown',
+canvas.addEventListener('mousedown',
     (e) => {
         const angle = Math.atan2(e.clientY - center.y, e.clientX - center.x);
         const speed = {
