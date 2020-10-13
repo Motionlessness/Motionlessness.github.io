@@ -211,7 +211,6 @@ function animate() {
             }, 0);
         }
     });
-
     // draw each enemy in array and update possition
     enemies.forEach((enemy, i) => {
         enemy.update();
