@@ -29,7 +29,8 @@ playerImg.src = document.getElementById("playerImg").src;
 const playerSVG = new Image();
 playerSVG.src = document.getElementById("playerSVG").src;
 
-
+const backgroundImg = new Image();
+backgroundImg.src = document.getElementById("backgroundImg").src;
 
 class Player {
     constructor(x, y, radius, color) {
@@ -189,7 +190,7 @@ function animate() {
     frame = requestAnimationFrame(animate);
     // clear canvas and draw player
     ctx.fillStyle = 'rgba(0, 0, 0, .5)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImg,0, 0, canvas.width, canvas.height);
     player.draw();
 
     // displays player score to user
@@ -226,7 +227,7 @@ function animate() {
         projectiles.forEach((projectile, j) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
             if (dist - enemy.radius - projectile.radius < .1) {
-                if (enemy.radiusShip/Math.PI - 10 > 10) {
+                if (enemy.radiusShip/Math.PI - 20 > 10) {
                     enemy.radiusShip = enemy.radiusShip / 2;
                     setTimeout(() => {
                         projectiles.splice(j, 1);
