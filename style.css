@@ -1,3 +1,7 @@
+* {
+    user-select: none;
+}
+
 #miniGame{
     cursor: none;
     position: absolute;
