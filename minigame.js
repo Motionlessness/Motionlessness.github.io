@@ -35,16 +35,17 @@ projectile.src = document.getElementById("projectileSVG").src;
 const backgroundImg = new Image();
 backgroundImg.src = document.getElementById("backgroundImg").src;
 
+
 class Player {
     constructor(x, y, radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.radiusShip = (radius*Math.PI);
+        this.radiusShip = (radius * Math.PI);
     }
 
     draw() {
-        ctx.drawImage(playerSVG, this.x - (this.radiusShip/2), this.y - (this.radiusShip/2), this.radiusShip, this.radiusShip);
+        ctx.drawImage(playerSVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
     }
 
 }
@@ -156,7 +157,7 @@ function spawnEnemy() {
             y = Math.random() * canvas.height;
         } else {
             x = Math.random() * canvas.width;
-            y = Math.random() < 0.5 ? 0 - radius  * Math.PI: canvas.height + radius * Math.PI;
+            y = Math.random() < 0.5 ? 0 - radius * Math.PI : canvas.height + radius * Math.PI;
         }
 
         const angle = Math.atan2(center.y - y, center.x - x);
@@ -201,8 +202,6 @@ function animate() {
         // if enemy comes in contact with player stop animation and display end game modal
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
         if (dist - enemy.radius - player.radius < .1) {
-            cancelAnimationFrame(frame);
-            canvas.style.cursor = 'crosshair'; // #crosshair
             gameEnd();
         }
 
@@ -210,7 +209,7 @@ function animate() {
         projectiles.forEach((projectile, j) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
             if (dist - enemy.radius - projectile.radius < .1) {
-                if (enemy.radiusShip/Math.PI - 20 >= 20) {
+                if (enemy.radiusShip / Math.PI - 20 >= 20) {
                     enemy.radiusShip = enemy.radiusShip / 2;
                     setTimeout(() => {
                         projectiles.splice(j, 1);
@@ -294,6 +293,8 @@ button.forEach(function (button) {
 
 // Display/hide end game prompt to user
 function gameEnd() {
+    cancelAnimationFrame(frame);
+    canvas.style.cursor = 'crosshair'; // #crosshair
     finalScore.textContent = 'Score: ' + score;
     modal.style.display = "block";
     closeSpan.onclick = function () {
@@ -312,6 +313,7 @@ rules.onclick = function () {
     rulesSpan.onclick = function () {
         rulesModal.style.display = "none";
         animate();
+        spawnEnemy();
     };
 };
 
@@ -319,6 +321,11 @@ window.addEventListener('keydown',
     (key) => {
         if (key.keyCode == 27 && !rulesOpen) {
             rules.click();
+            rulesOpen = true;
+        }
+        else if (key.keyCode == 27 && rulesOpen) {
+            rulesSpan.click();
+            rulesOpen = false;
         }
     }
 );
