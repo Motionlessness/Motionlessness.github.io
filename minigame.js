@@ -41,11 +41,11 @@ class Player {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.radiusShip = (radius * Math.PI);
+        this.radiusShip = Math.sqrt(((radius / 2)*(radius / 2))*2);
     }
 
     draw() {
-        ctx.drawImage(playerSVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
+        ctx.drawImage(playerSVG, this.x - (this.radiusShip/2), this.y - (this.radiusShip/2), this.radiusShip, this.radiusShip);
     }
 
 }
@@ -75,11 +75,11 @@ class Enemy {
         this.y = y;
         this.radius = radius;
         this.speed = speed;
-        this.radiusShip = (radius * Math.PI);
+        this.radiusShip = Math.sqrt(((radius / 2)*(radius / 2))*2);;
     }
 
     draw() {
-        ctx.drawImage(enemySVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
+        ctx.drawImage(enemySVG, this.x - (this.radiusShip/2), this.y - (this.radiusShip/2), this.radiusShip, this.radiusShip);
     }
 
     update() {
@@ -129,7 +129,7 @@ class Crosshair {
 }
 
 // construct player in center of canvas
-const player = new Player(center.x, center.y, 40);
+const player = new Player(center.x, center.y, 110);
 // draw crosshair on mouse (x,y) co-ordinates
 const crosshair = new Crosshair(mouse.x, mouse.y, 10, 'rgba(255,0,0,1)'); // #crosshair
 
@@ -149,7 +149,7 @@ let frame;
 // spawns enemy randomly around the edge of the canvas
 function spawnEnemy() {
     setInterval(() => {
-        const radius = Math.random() * 40 + 10;
+        const radius = Math.random() * 100 + 55;
         let x;
         let y;
         if (Math.random() < 0.5) {
@@ -202,15 +202,15 @@ function animate() {
         enemy.update();
         // if enemy comes in contact with player stop animation and display end game modal
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-        if (dist - enemy.radius - player.radius < .1) {
+        if (dist - enemy.radiusShip/2 - player.radiusShip/2 < .05) {
             gameEnd();
         }
 
         // if a projectile hits enemy, reduce enemy size and update score
         projectiles.forEach((projectile, j) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
-            if (dist - enemy.radius - projectile.radius < .1) {
-                if (enemy.radiusShip / Math.PI - 20 >= 20) {
+            if (dist - enemy.radiusShip/2 - projectile.radius/2 < .05) {
+                if (enemy.radiusShip - 15 >= 20) {
                     enemy.radiusShip = enemy.radiusShip / 2;
                     setTimeout(() => {
                         projectiles.splice(j, 1);
