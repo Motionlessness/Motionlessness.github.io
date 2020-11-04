@@ -34,18 +34,68 @@ projectile.src = document.getElementById("projectileSVG").src;
 
 const backgroundImg = new Image();
 backgroundImg.src = document.getElementById("backgroundImg").src;
+// #upgrade class start
+class Upgrade {
+    constructor(x, y, radius, speed, type) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.speed = speed;
+        this.type = type; // Offensive(true) or Defensive(false) boolean upgrade
+        this.active = false;
+    }
 
+    draw() {
+        if (this.type == true) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = 'rgba(250,0,250,1)';
+            ctx.fill();
+        }
+        else {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = 'rgba(0,250,0,1)';
+            ctx.fill();
+        }
+    }
 
+    update() {
+        if (!this.active) {
+            this.draw();
+            this.x = this.x + this.speed.x;
+            this.y = this.y + this.speed.y;
+        } else {
+            this.drawUse();
+        }
+    }
+
+    drawUse() {
+        if (this.type == true) {
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius/2, 0, Math.PI * 2, false);
+            ctx.strokeStyle = 'rgba(250,0,250,1)';
+            ctx.stroke();
+        }
+        else {
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2, false);
+            ctx.strokeStyle = 'rgba(0,250,0,1)';
+            ctx.stroke();
+        }
+    }
+}
+// #upgrade class end
 class Player {
     constructor(x, y, radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.radiusShip = Math.sqrt(((radius / 2)*(radius / 2))*2);
+        this.radiusShip = Math.sqrt(((radius / 2) * (radius / 2)) * 2);
     }
 
     draw() {
-        ctx.drawImage(playerSVG, this.x - (this.radiusShip/2), this.y - (this.radiusShip/2), this.radiusShip, this.radiusShip);
+        ctx.drawImage(playerSVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
     }
 
 }
@@ -75,11 +125,11 @@ class Enemy {
         this.y = y;
         this.radius = radius;
         this.speed = speed;
-        this.radiusShip = Math.sqrt(((radius / 2)*(radius / 2))*2);;
+        this.radiusShip = Math.sqrt(((radius / 2) * (radius / 2)) * 2);;
     }
 
     draw() {
-        ctx.drawImage(enemySVG, this.x - (this.radiusShip/2), this.y - (this.radiusShip/2), this.radiusShip, this.radiusShip);
+        ctx.drawImage(enemySVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
     }
 
     update() {
@@ -137,6 +187,9 @@ const crosshair = new Crosshair(mouse.x, mouse.y, 10, 'rgba(255,0,0,1)'); // #cr
 const projectiles = [];
 // constructs an array to contain enemies
 const enemies = [];
+// constructs an array to contain upgrades #upgrade
+const upgrades = [];
+
 
 // score of player at new game
 let score = 0;
@@ -165,6 +218,7 @@ function spawnEnemy() {
             x: Math.cos(angle),
             y: Math.sin(angle)
         };
+
 
         enemies.push(new Enemy(x, y, radius, speed));
     }, 2000);
@@ -202,14 +256,25 @@ function animate() {
         enemy.update();
         // if enemy comes in contact with player stop animation and display end game modal
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-        if (dist - enemy.radiusShip/2 - player.radiusShip/2 < .05) {
+        
+        for (let upgrade of upgrades) {
+            if (!upgrade.type && upgrade.active && (dist - enemy.radiusShip / 2 - player.radiusShip / 2 < .05)) {
+                setTimeout(() => {
+                    enemies.splice(i, 1);
+                    upgrades.splice(upgrades.indexOf(upgrade),1);
+                }, 0);
+                break;
+            };
+        };
+        if (dist - enemy.radiusShip / 2 - player.radiusShip / 2 < .05 && !upgrades.some(checkUpgrade)) {
             gameEnd();
-        }
+        };
+        
 
         // if a projectile hits enemy, reduce enemy size and update score
         projectiles.forEach((projectile, j) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
-            if (dist - enemy.radiusShip/2 - projectile.radius/2 < .05) {
+            if (dist - enemy.radiusShip / 2 - projectile.radius / 2 < .05) {
                 if (enemy.radiusShip - 15 >= 20) {
                     enemy.radiusShip = enemy.radiusShip / 2;
                     setTimeout(() => {
@@ -218,6 +283,8 @@ function animate() {
                     }, 0);
                 } else {
                     setTimeout(() => {
+                        const reward = Math.random() * 2 < 0.5 ? true : false; // Random reward boolean #upgrade
+                        if (reward) { upgrades.push(new Upgrade(enemy.x, enemy.y, 5, enemy.speed, Math.random() < 0.5 ? true : false)) }; // #upgrade
                         enemies.splice(i, 1);
                         projectiles.splice(j, 1);
                         score += 10;
@@ -227,6 +294,16 @@ function animate() {
             };
         });
     });
+    // draw each upgrade in array and update possition #upgrade start
+    upgrades.forEach((upgrade, i) => {
+        upgrade.update();
+        const dist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y);
+        if (dist - upgrade.radius / 2 - player.radiusShip / 2 < .05 && !upgrade.active) {
+            upgrade.active = true;
+        };
+
+    });
+    // #upgrade end
     // keep crosshair on canvas
     crosshair.update(); // #crosshair
 };
@@ -305,7 +382,9 @@ function gameEnd() {
         location.reload();
     }
 };
-
+function checkUpgrade(upgrade) {
+    return !upgrade.type;
+}
 // Display/hide rules prompt to user on click
 // also cancels / resumes canvas animation
 rules.onclick = function () {
