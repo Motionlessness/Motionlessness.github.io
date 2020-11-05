@@ -111,6 +111,13 @@
     background: radial-gradient( rgba(66, 0, 255, .85)50%, rgba(210,110,210,.85));
     filter: url('#wave');
 }
+.off {
+    color: rgba(255, 0, 255, 1);
+}
+
+.def {
+    color: rgba(0, 255, 0, 1);
+}
 .footer {
     display: none;
 }
