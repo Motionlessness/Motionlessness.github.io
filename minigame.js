@@ -73,13 +73,13 @@ class Upgrade {
     drawUse() {
         if (this.type == true) {
             ctx.beginPath();
-            ctx.arc(player.x, player.y, player.radius/2, 0, Math.PI * 2, false);
+            ctx.arc(player.x, player.y, player.radius/2.5, 0, Math.PI * 2, false);
             ctx.strokeStyle = 'rgba(250,0,250,1)';
             ctx.stroke();
         }
         else {
             ctx.beginPath();
-            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2, false);
+            ctx.arc(player.x, player.y, player.radius/2, 0, Math.PI * 2, false);
             ctx.strokeStyle = 'rgba(0,250,0,1)';
             ctx.stroke();
         }
