@@ -313,7 +313,9 @@ function animateBoss() {
                 boss.radius -= 0.15;
                 boss.radiusShip = Math.sqrt(((boss.radius / 2) * (boss.radius / 2)) * 2);
                 boss.health -= 5;
-                projectiles.splice(j, 1);
+                setTimeout(() => {
+                    projectiles.splice(j, 1);
+                }, 0);
             }
             else if (dist - boss.radiusShip / 2 - projectile.radius / 2 < .05 && projectile.upgraded) {
                 boss.radius -= 0.15;
