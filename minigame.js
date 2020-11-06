@@ -265,9 +265,8 @@ function animateBoss() {
     ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
     player.draw();
     ctx.font = "30px Verdana";
-    ctx.fillStyle = 'purple';
-    ctx.fillText('Score: ' + score, (canvas.width/25), 50);
-    ctx.fillText('Shields: ' + shieldCount, (canvas.width/25)*2, 50);
+    ctx.fillStyle = 'rgba(0, 255, 0, 1)';
+    ctx.fillText('Score: ' + score + '\t\tShields: ' + shieldCount, (canvas.width/25), 50);
 
     if (Math.random() * 100 < 0.5) {
         const radius = Math.random() * 100 + 55;
@@ -443,9 +442,8 @@ function animate() {
 
     // displays player score to user
     ctx.font = "30px Verdana";
-    ctx.fillStyle = 'purple';
-    ctx.fillText('Score: ' + score, (canvas.width/25), 50);
-    ctx.fillText('Shields: ' + shieldCount, canvas.width*.35, 50);
+    ctx.fillStyle = 'rgba(0, 255, 0, 1)';
+    ctx.fillText('Score: ' + score + '\t\tShields: ' + shieldCount, (canvas.width/25), 50);
 
     // draw each projectile in array and update possition
     projectiles.forEach((projectile, i) => {
