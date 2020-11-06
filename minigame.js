@@ -267,7 +267,7 @@ function animateBoss() {
     ctx.font = "30px Verdana";
     ctx.fillStyle = 'purple';
     ctx.fillText('Score: ' + score, (canvas.width/25), 50);
-    ctx.fillText('Shields: ' + shieldCount, canvas.width*.35, 50);
+    ctx.fillText('Shields: ' + shieldCount, (canvas.width/25)*2, 50);
 
     if (Math.random() * 100 < 0.5) {
         const radius = Math.random() * 100 + 55;
