@@ -23,6 +23,9 @@ canvas.height = window.innerHeight; // set drawing panel to broswer viewing heig
 // (x,y) co-ordinates for canvas center
 const center = { x: canvas.width / 2, y: canvas.height / 2 };
 
+const bossSVG = new Image();
+bossSVG.src = document.getElementById("bossSVG").src;
+
 const enemySVG = new Image();
 enemySVG.src = document.getElementById("enemySVG").src;
 
@@ -158,7 +161,7 @@ class Boss {
     }
 
     draw() {
-        ctx.drawImage(enemySVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
+        ctx.drawImage(bossSVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
     }
 
     update() {
