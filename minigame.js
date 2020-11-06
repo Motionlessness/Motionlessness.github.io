@@ -162,6 +162,9 @@ class Boss {
 
     draw() {
         ctx.drawImage(bossSVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
+        ctx.font = "30px Verdana";
+        ctx.fillStyle = 'white';
+        ctx.fillText('HP: ' + Math.floor((this.health/10000)*100) + "%", (this.x - (this.radiusShip / 2)+30), (this.y - (this.radiusShip / 2)));
     }
 
     update() {
@@ -221,6 +224,7 @@ const crosshair = new Crosshair(mouse.x, mouse.y, 10, 'rgba(255,0,0,1)'); // #cr
 const projectiles = [];
 // constructs an array to contain enemies
 const enemies = [];
+// constructs an array to contain bosses
 const bosses = [];
 // constructs an array to contain upgrades #upgrade
 const upgrades = [];
@@ -228,13 +232,16 @@ const upgrades = [];
 
 // score of player at new game
 let score = 0;
+// number of enemy spaceships destroyed
 let enemyCount = 0;
-// display for player score
+// display score to player at game end
 var finalScore = document.getElementById("score");
 
 // current animation frame
 let frame;
+// Variable to store enemy Interval
 var enemyTimer;
+
 // spawns a boss at 50 enemies destroyed
 function spawnBoss() {
     const radius = 300;
@@ -245,7 +252,7 @@ function spawnBoss() {
     
     bosses.push(new Boss(x, y, radius, angle));
 };
-
+// animates boss spaceship and spawns random enemy spaceships and animates them
 function animateBoss() {
     frame = requestAnimationFrame(animateBoss);
 
@@ -292,6 +299,7 @@ function animateBoss() {
             }, 0);
         }
     });
+    
     bosses.forEach((boss, i) => {
         boss.update();
         
@@ -303,11 +311,13 @@ function animateBoss() {
                 boss.health -= 5;
                 projectiles.splice(j, 1);
             }
-            if (dist - boss.radiusShip / 2 - projectile.radius / 2 < .05 && projectile.upgraded) {
+            else if (dist - boss.radiusShip / 2 - projectile.radius / 2 < .05 && projectile.upgraded) {
                 boss.radius -= 0.15;
                 boss.radiusShip = Math.sqrt(((boss.radius / 2) * (boss.radius / 2)) * 2);
                 boss.health -= 10;
-                projectile.upgraded = false;
+                setTimeout(() => {
+                    projectile.upgraded = false;
+                }, 0); 
             }
             if (boss.health < 0) {
                 score += 100;
