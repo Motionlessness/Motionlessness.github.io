@@ -199,11 +199,14 @@ class Crosshair {
 
     draw() {
         ctx.beginPath();
-        ctx.moveTo(this.x + 10, this.y,);
-        ctx.lineTo(this.x - 10, this.y);
-        ctx.moveTo(this.x, this.y + 10);
-        ctx.lineTo(this.x, this.y - 10);
+        ctx.moveTo(this.x + this.size, this.y,);
+        ctx.lineTo(this.x - this.size, this.y);
+        ctx.moveTo(this.x, this.y + this.size);
+        ctx.lineTo(this.x, this.y - this.size);
+        ctx.moveTo(this.x + this.size, this.y);
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);   
         ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
         ctx.stroke();
     }
 
@@ -218,7 +221,7 @@ class Crosshair {
 // construct player in center of canvas
 const player = new Player(center.x, center.y, 110);
 // draw crosshair on mouse (x,y) co-ordinates
-const crosshair = new Crosshair(mouse.x, mouse.y, 10, 'rgba(255,0,0,1)'); // #crosshair
+const crosshair = new Crosshair(mouse.x, mouse.y, 10, 'rgba(100,100,255,1)'); // #crosshair
 
 // constructs an array to contain projectiles
 const projectiles = [];
@@ -236,6 +239,8 @@ let score = 0;
 let enemyCount = 0;
 // display score to player at game end
 var finalScore = document.getElementById("score");
+
+let shieldCount = 0;
 
 // current animation frame
 let frame;
@@ -259,10 +264,10 @@ function animateBoss() {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
     player.draw();
-
     ctx.font = "30px Verdana";
     ctx.fillStyle = 'purple';
-    ctx.fillText('Score: ' + score, 50, 50);
+    ctx.fillText('Score: ' + score, (canvas.width/25), 50);
+    ctx.fillText('Shields: ' + shieldCount, canvas.width*.35, 50);
 
     if (Math.random() * 100 < 0.5) {
         const radius = Math.random() * 100 + 55;
@@ -341,6 +346,7 @@ function animateBoss() {
                 setTimeout(() => {
                     enemies.splice(i, 1);
                     upgrades.splice(upgrades.indexOf(upgrade), 1);
+                    shieldCount --;
                 }, 0);
                 break;
             };
@@ -387,6 +393,9 @@ function animateBoss() {
         const dist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y);
         if (dist - upgrade.radius / 2 - player.radiusShip / 2 < .05 && !upgrade.active) {
             upgrade.active = true;
+            if (!upgrade.type) {
+                shieldCount++; 
+            };
         };
         for (let projectile of projectiles) {
             if (upgrade.type && upgrade.active && !projectile.upgraded) {
@@ -435,7 +444,8 @@ function animate() {
     // displays player score to user
     ctx.font = "30px Verdana";
     ctx.fillStyle = 'purple';
-    ctx.fillText('Score: ' + score, 50, 50);
+    ctx.fillText('Score: ' + score, (canvas.width/25), 50);
+    ctx.fillText('Shields: ' + shieldCount, canvas.width*.35, 50);
 
     // draw each projectile in array and update possition
     projectiles.forEach((projectile, i) => {
@@ -463,6 +473,7 @@ function animate() {
                 setTimeout(() => {
                     enemies.splice(i, 1);
                     upgrades.splice(upgrades.indexOf(upgrade),1);
+                    shieldCount --;
                 }, 0);
                 break;
             };
@@ -511,6 +522,9 @@ function animate() {
         const dist = Math.hypot(player.x - upgrade.x, player.y - upgrade.y);
         if (dist - upgrade.radius / 2 - player.radiusShip / 2 < .05 && !upgrade.active) {
             upgrade.active = true;
+            if (!upgrade.type) {
+                shieldCount++;
+            }
         };
         for (let projectile of projectiles) {
             if (upgrade.type && upgrade.active && !projectile.upgraded) {
