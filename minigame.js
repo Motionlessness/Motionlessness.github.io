@@ -309,11 +309,12 @@ function animateBoss() {
             if (boss.health < 0) {
                 score += 100;
                 bosses.splice(i, 1);
-                setTimeout(() => {
-                    cancelAnimationFrame(frame);
-                    animate();
-                    spawnEnemy();
-                },0);
+                cancelAnimationFrame(frame);
+                clearInterval(enemyTimer);
+                enemies.splice(0, enemies.length);
+                enemies.length = 0;
+                animate();
+                spawnEnemy();     
             }
         });
     });
@@ -511,6 +512,8 @@ function animate() {
         setTimeout(() => {
             cancelAnimationFrame(frame);
             clearInterval(enemyTimer);
+            enemies.splice(0, enemies.length);
+            enemies.length = 0;
             spawnBoss();
             animateBoss();
             enemyCount = 0;
