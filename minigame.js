@@ -153,7 +153,7 @@ class Boss {
         this.y = y;
         this.radius = radius;
         this.speed = speed;
-        this.health = 100000;
+        this.health = 10000;
         this.radiusShip = Math.sqrt(((radius / 2) * (radius / 2)) * 2);
     }
 
@@ -295,12 +295,14 @@ function animateBoss() {
         projectiles.forEach((projectile, j) => {
             const dist = Math.hypot(projectile.x - boss.x, projectile.y - boss.y);
             if (dist - boss.radiusShip / 2 - projectile.radius / 2 < .05 && !projectile.upgraded) {
-                boss.radius -= 1;
+                boss.radius -= 0.15;
+                boss.radiusShip = Math.sqrt(((boss.radius / 2) * (boss.radius / 2)) * 2);
                 boss.health -= 5;
                 projectiles.splice(j, 1);
             }
             if (dist - boss.radiusShip / 2 - projectile.radius / 2 < .05 && projectile.upgraded) {
-                boss.radius -= 2;
+                boss.radius -= 0.15;
+                boss.radiusShip = Math.sqrt(((boss.radius / 2) * (boss.radius / 2)) * 2);
                 boss.health -= 10;
                 projectile.upgraded = false;
             }
@@ -506,11 +508,13 @@ function animate() {
     // keep crosshair on canvas
     crosshair.update(); // #crosshair
     if (enemyCount == 50) {
-        cancelAnimationFrame(frame);
-        clearInterval(enemyTimer);
-        spawnBoss();
-        animateBoss();
-        enemyCount = 0;
+        setTimeout(() => {
+            cancelAnimationFrame(frame);
+            clearInterval(enemyTimer);
+            spawnBoss();
+            animateBoss();
+            enemyCount = 0;
+        }, 0);
     }
 };
 
