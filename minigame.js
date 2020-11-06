@@ -164,7 +164,7 @@ class Boss {
         ctx.drawImage(bossSVG, this.x - (this.radiusShip / 2), this.y - (this.radiusShip / 2), this.radiusShip, this.radiusShip);
         ctx.font = "30px Verdana";
         ctx.fillStyle = 'white';
-        ctx.fillText('HP: ' + Math.floor((this.health/10000)*100) + "%", (this.x - (this.radiusShip / 2)+30), (this.y - (this.radiusShip / 2)));
+        ctx.fillText('HP: ' + Math.ceil((this.health/10000)*100) + "%", (this.x - (this.radiusShip / 2)+30), (this.y - (this.radiusShip / 2)));
     }
 
     update() {
